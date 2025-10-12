@@ -1,0 +1,66 @@
+---
+// Interactive "Daily Moments" micro-interaction
+const moments = [
+  {
+    day: "Monday",
+    thought: "While debugging code today, I smiled thinking about how you debug people's health with the same patience I wish I had.",
+    icon: "💻"
+  },
+  {
+    day: "Wednesday", 
+    thought: "Saw a couple holding hands at lunch. Made me miss your hand in mine. Soon, my love.",
+    icon: "🤝"
+  },
+  {
+    day: "Friday",
+    thought: "Every deployment I finish, I think: one step closer to the weekend when I can call you without rushing.",
+    icon: "📱"
+  }
+];
+---
+
+<section class="my-12 opacity-0 animate-on-scroll">
+  <h2 class="text-2xl font-semibold text-rose-800 mb-6 text-center">
+    Little Moments I Think of You
+  </h2>
+  
+  <div class="space-y-4">
+    {moments.map((moment, index) => (
+      <div 
+        class="bg-white/70 backdrop-blur rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow cursor-pointer moment-card"
+        data-index={index}
+      >
+        <div class="flex items-start gap-3">
+          <span class="text-3xl">{moment.icon}</span>
+          <div class="flex-1">
+            <p class="text-xs font-semibold text-rose-500 uppercase tracking-wide mb-1">
+              {moment.day}
+            </p>
+            <p class="text-gray-700 text-sm leading-relaxed">
+              {moment.thought}
+            </p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Subtle hover interaction
+  const cards = document.querySelectorAll('.moment-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      card.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        card.style.transform = 'scale(1)';
+      }, 200);
+    });
+  });
+</script>
+
+<style>
+  .moment-card {
+    transition: transform 0.2s ease;
+  }
+</style>

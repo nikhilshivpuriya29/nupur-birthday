@@ -1,0 +1,30 @@
+---
+// Optional voice message player
+---
+
+<section class="my-12 opacity-0 animate-on-scroll">
+  <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-2xl shadow-xl p-6 text-white text-center">
+    <h2 class="text-xl font-semibold mb-4">
+      A Message From My Heart
+    </h2>
+    
+    <p class="text-rose-100 text-sm mb-6">
+      Press play to hear something special
+    </p>
+    
+    <audio 
+      id="voice-player"
+      controls 
+      preload="none"
+      class="w-full max-w-sm mx-auto rounded-lg"
+      style="filter: brightness(1.1);"
+    >
+      <source src="/audio/voice-note.mp3" type="audio/mpeg">
+      Your browser doesn't support audio playback.
+    </audio>
+    
+    <p class="text-rose-100 text-xs mt-4 italic">
+      Made with love, just for you 💕
+    </p>
+  </div>
+</section>

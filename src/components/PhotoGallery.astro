@@ -1,0 +1,54 @@
+---
+// Photo gallery with lazy loading and LQIP
+const photos = [
+  { src: '/images/photo-1.webp', alt: 'Our moment together 1' },
+  { src: '/images/photo-2.webp', alt: 'Our moment together 2' },
+  { src: '/images/photo-3.webp', alt: 'Our moment together 3' },
+  { src: '/images/photo-4.webp', alt: 'Our moment together 4' },
+  { src: '/images/photo-5.webp', alt: 'Our moment together 5' },
+  { src: '/images/photo-6.webp', alt: 'Our moment together 6' },
+  { src: '/images/photo-7.webp', alt: 'Our moment together 7' },
+  { src: '/images/photo-8.webp', alt: 'Our moment together 8' },
+  { src: '/images/photo-9.webp', alt: 'Our moment together 9' },
+  { src: '/images/photo-10.webp', alt: 'Our moment together 10' },
+  { src: '/images/photo-11.webp', alt: 'Our moment together 11' },
+  { src: '/images/photo-12.webp', alt: 'Our moment together 12' }
+];
+---
+
+<section class="my-12 opacity-0 animate-on-scroll">
+  <h2 class="text-2xl font-semibold text-rose-800 mb-6 text-center">
+    Our Journey in Pictures
+  </h2>
+  
+  <div class="grid grid-cols-2 gap-3">
+    {photos.map((photo, i) => (
+      <div class="relative aspect-square rounded-lg overflow-hidden shadow-md bg-rose-100 photo-item">
+        <img 
+          src={photo.src}
+          alt={photo.alt}
+          loading="lazy"
+          class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+          decoding="async"
+        />
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Intersection observer for progressive image loading
+  const imageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target.querySelector('img');
+        if (img) {
+          img.classList.add('loaded');
+        }
+        imageObserver.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '50px' });
+  
+  document.querySelectorAll('.photo-item').forEach(item => imageObserver.observe(item));
+</script>
