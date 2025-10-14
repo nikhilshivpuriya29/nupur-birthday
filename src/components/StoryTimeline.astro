@@ -1,0 +1,258 @@
+---
+// Interactive animated story timeline
+const storyMoments = [
+  {
+    emoji: "💬",
+    title: "Where It All Began",
+    text: "Hamari baatein sabse pehle chat pe shuru hui thi... Jab tune hi message kiya, tab bilkul nahi laga tha ki hum saath mein honge.",
+    date: "1206 days ago"
+  },
+  {
+    emoji: "🌙",
+    title: "That First Night",
+    text: "Us raat ko subah hota hua dekha hai... Aur aaj 1206 din ho gaye hain. Fir bhi aisa lagta hai jaise ye kal ki hi toh baat hai.",
+    date: "Day 1"
+  },
+  {
+    emoji: "✨",
+    title: "Instant Connection",
+    text: "Us time baat karte time bhi aisa nahi lag raha tha ki hum aaj pehli baar baatein kar rahe hain... It felt like coming home.",
+    date: "The beginning"
+  },
+  {
+    emoji: "🗺️",
+    title: "Our Dreams & Plans",
+    text: "Hamari vo plannings... Tujhe Udaygiri le kar jaana, paani mein pair daal kar baithna, saath mein sab kuch enjoy karna.",
+    date: "Planning our future"
+  },
+  {
+    emoji: "🎯",
+    title: "Dreams Came True",
+    text: "Sab kuch humne apni planning se lekar apni life mein kiya... Aur I know, abhi ki hamari jo bhi plannings hain, vo bhi hum poora karenge.",
+    date: "Our adventures"
+  },
+  {
+    emoji: "🚂",
+    title: "The Train Station Kiss",
+    text: "Aisa lagta hai jaise kal hi toh hum train mein mile the... Aur maine tujhse bola 'Idhar aa, kaan mein kuch bolna hai' aur puchchi de kar chala gaya.",
+    date: "That moment"
+  },
+  {
+    emoji: "😊",
+    title: "Lost in Time",
+    text: "Vo dar... Beech time mein train mein milna aur bhool hi jaana ki train waha se jayegi bhi. Tere saath time hi ruk jaata hai.",
+    date: "Forever feeling"
+  },
+  {
+    emoji: "🌳",
+    title: "Under the Tree",
+    text: "Hamara vo ped ki neeche wala moment... Saath mein bike pe ghumna... Phir tujh mein itna kho jaana ki meri train hi miss ho gayi.",
+    date: "Our secret place"
+  },
+  {
+    emoji: "🏠",
+    title: "Heaven on Earth",
+    text: "Tere saath rehna aur saath mein khana banana aur khana - this is what heaven is. This is the whole point of our life.",
+    date: "Our home together"
+  },
+  {
+    emoji: "💔",
+    title: "The Storms We Survived",
+    text: "Beech beech mein apni ladaiyan... Breakup hona 1 nahi, 2 nahi, 3-3 baar. Aur phir se saath mein ho jaana. We're stronger together.",
+    date: "Lessons learned"
+  },
+  {
+    emoji: "💍",
+    title: "Forever & Beyond",
+    text: "Ye sab 1206 days na... Humko isko at least 1206000 tak lekar jaana hai. Until death do us part, hum alag nahi honge.",
+    date: "Our promise"
+  },
+  {
+    emoji: "❤️",
+    title: "Happy Birthday, My Love",
+    text: "All these are not just simple days... I don't have words to express yaar kya bolu. You are my everything, Nupur. Here's to forever.",
+    date: "Today & Always"
+  }
+];
+---
+
+<section id="story-section" class="hidden fixed inset-0 bg-gradient-to-br from-rose-800 via-pink-800 to-red-800 z-50 overflow-y-auto">
+
+  <div class="min-h-screen px-4 py-12">
+    <button 
+      id="close-story" 
+      class="fixed top-4 right-4 z-50 bg-white/20 backdrop-blur text-white rounded-full p-3 hover:bg-white/30 transition-all"
+      aria-label="Close story"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-3xl font-cursive text-white text-center mb-4 animate-fade-in">
+        Our Story
+      </h2>
+      <p class="text-rose-200 text-center mb-12 animate-fade-in" style="animation-delay: 0.2s;">
+        1206 Days of Love, Laughter & Forever
+      </p>
+
+      <div class="relative">
+        <!-- Timeline line -->
+        <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-rose-300 via-pink-300 to-purple-300 opacity-30"></div>
+
+        <!-- Story moments -->
+        {storyMoments.map((moment, index) => (
+          <div 
+            class="story-card relative mb-8 opacity-0"
+            data-index={index}
+            style={`animation-delay: ${index * 0.1}s;`}
+          >
+            <div class="flex gap-4">
+              <!-- Timeline dot -->
+              <div class="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-3xl shadow-lg relative z-10">
+                {moment.emoji}
+              </div>
+              
+              <!-- Content card -->
+              <div class="flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-5 shadow-xl border border-white/20 hover:bg-white/15 transition-all">
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="font-semibold text-white text-lg">
+                    {moment.title}
+                  </h3>
+                  <span class="text-xs text-rose-200 bg-white/10 px-2 py-1 rounded-full">
+                    {moment.date}
+                  </span>
+                </div>
+                <p class="text-rose-100 text-sm leading-relaxed">
+                  {moment.text}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Heart animation at the end -->
+      <div class="text-center mt-12 mb-8">
+        <div class="inline-block animate-heartbeat">
+          <svg class="w-20 h-20 text-rose-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <p class="text-white font-cursive text-2xl mt-4">
+          Forever Yours, Nikhil
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  .story-card {
+    animation: slideInUp 0.6s ease-out forwards;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.15); }
+  }
+
+  .animate-heartbeat {
+    animation: heartbeat 2s infinite;
+  }
+
+  /* Smooth scrolling */
+  #story-section {
+    scroll-behavior: smooth;
+  }
+
+  /* Glass morphism effect */
+  @supports (backdrop-filter: blur(10px)) {
+    #story-section {
+      backdrop-filter: blur(10px);
+    }
+  }
+</style>
+
+<script>
+  // Background music setup (optional - only works if you add the MP3 file)
+  const bgMusic = new Audio('/audio/background-music.mp3');
+  bgMusic.volume = 0.3;
+  bgMusic.loop = true;
+
+  // Open story timeline
+  const heroButton = document.getElementById('hero-cta');
+  const storySection = document.getElementById('story-section');
+  const closeButton = document.getElementById('close-story');
+
+  if (heroButton && storySection) {
+    heroButton.addEventListener('click', () => {
+      storySection.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Try to play background music (will fail silently if file doesn't exist)
+      bgMusic.play().catch(() => {
+        console.log('Background music not found or autoplay prevented');
+      });
+      
+      // Trigger card animations on scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.story-card').forEach(card => {
+        observer.observe(card);
+      });
+    });
+  }
+
+  if (closeButton && storySection) {
+    closeButton.addEventListener('click', () => {
+      storySection.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      
+      // Stop music when closing
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+    });
+  }
+
+  // Close on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && storySection && !storySection.classList.contains('hidden')) {
+      storySection.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      
+      // Stop music on escape
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+    }
+  });
+</script>
