@@ -1,0 +1,384 @@
+---
+// 100 Reasons I Love You - Interactive Card Deck
+const reasons = [
+  { icon: "💖", reason: "The way you care for me like no one else ever has" },
+  { icon: "🎤", reason: "Your voice that makes my heart skip a beat every time" },
+  { icon: "💬", reason: "How you talk to me for hours and it still feels like minutes" },
+  { icon: "👗", reason: "Your impeccable style that turns heads everywhere" },
+  { icon: "👑", reason: "Your dominating nature that keeps me in check" },
+  { icon: "🥰", reason: "Your cuteness that melts my heart instantly" },
+  { icon: "😤", reason: "Even your anger, because it shows how much you care" },
+  { icon: "📏", reason: "Your perfect height that fits right into my arms" },
+  { icon: "👸", reason: "How you're a princess and a queen at the same time" },
+  { icon: "🩺", reason: "Your dedication as a doctor saving lives every day" },
+  { icon: "❤️", reason: "How you love me unconditionally despite the distance" },
+  { icon: "😊", reason: "Your smile that lights up my entire world" },
+  { icon: "🌟", reason: "The way you shine in everything you do" },
+  { icon: "🤗", reason: "Your warm hugs that feel like home" },
+  { icon: "💪", reason: "Your strength in handling difficult patients" },
+  { icon: "🌹", reason: "How you're as beautiful inside as you are outside" },
+  { icon: "🎯", reason: "Your focus and determination in your career" },
+  { icon: "🧠", reason: "Your intelligence that constantly amazes me" },
+  { icon: "💭", reason: "How you understand me without me saying a word" },
+  { icon: "🌙", reason: "Those late-night talks until we see the sunrise" },
+  { icon: "☀️", reason: "How you're the first thought in my morning" },
+  { icon: "🎨", reason: "Your creativity in making every moment special" },
+  { icon: "🍳", reason: "Cooking together and making a mess in the kitchen" },
+  { icon: "🚂", reason: "That train station kiss I'll never forget" },
+  { icon: "🌳", reason: "Our moments under that tree, just us two" },
+  { icon: "🏍️", reason: "Riding on the bike with you holding me tight" },
+  { icon: "📱", reason: "How you messaged me first and changed my life" },
+  { icon: "💌", reason: "Your sweet messages that make my day" },
+  { icon: "😴", reason: "How adorable you look when you're sleepy" },
+  { icon: "🍕", reason: "Sharing food and stealing bites from each other" },
+  { icon: "🎬", reason: "Movie nights even when we're miles apart" },
+  { icon: "📚", reason: "How you inspire me to be better every day" },
+  { icon: "🎵", reason: "The songs that remind me of you" },
+  { icon: "💃", reason: "Your confidence that's absolutely magnetic" },
+  { icon: "🌈", reason: "How you bring color to my black and white world" },
+  { icon: "☕", reason: "Morning coffee talks about everything and nothing" },
+  { icon: "🌺", reason: "Your feminine grace mixed with fierce independence" },
+  { icon: "🎁", reason: "How you make every day feel like a gift" },
+  { icon: "🔥", reason: "The passion you have for everything you do" },
+  { icon: "❄️", reason: "How you keep your cool in stressful situations" },
+  { icon: "🦋", reason: "The butterflies I still get when I see you" },
+  { icon: "🌸", reason: "Your gentle nature when you're with loved ones" },
+  { icon: "⚡", reason: "Your energy that's absolutely infectious" },
+  { icon: "🎪", reason: "How you make ordinary moments extraordinary" },
+  { icon: "🏥", reason: "Your compassion for every patient at the PHC" },
+  { icon: "💝", reason: "How you remember the smallest details about us" },
+  { icon: "🗺️", reason: "Planning our future adventures together" },
+  { icon: "🎂", reason: "How you make birthdays feel magical" },
+  { icon: "🌊", reason: "That dream of sitting by the water together" },
+  { icon: "⭐", reason: "You're my lucky star, my wish come true" },
+  { icon: "🎀", reason: "How you add beauty to everything you touch" },
+  { icon: "🔮", reason: "The way you understand my moods instantly" },
+  { icon: "🎭", reason: "Your dramatic side that makes me laugh" },
+  { icon: "🧸", reason: "Your childlike wonder at simple things" },
+  { icon: "👀", reason: "Your expressive eyes that speak volumes" },
+  { icon: "💋", reason: "Your kisses that I can never get enough of" },
+  { icon: "🎈", reason: "How you lift my spirits when I'm down" },
+  { icon: "🌻", reason: "Your optimism even in tough times" },
+  { icon: "💫", reason: "The magic you bring into my life" },
+  { icon: "🏆", reason: "How you're my biggest achievement in life" },
+  { icon: "🎓", reason: "Your dedication to learning and growing" },
+  { icon: "🌍", reason: "How you're my whole world" },
+  { icon: "🕊️", reason: "The peace I feel when I'm with you" },
+  { icon: "🎪", reason: "Your sense of humor that cracks me up" },
+  { icon: "🌅", reason: "Watching sunrises together, even virtually" },
+  { icon: "💎", reason: "You're rare, precious, and irreplaceable" },
+  { icon: "🎨", reason: "How colorful my life became after meeting you" },
+  { icon: "🍓", reason: "Your sweet nature that's irresistible" },
+  { icon: "🌙", reason: "Late-night philosophy talks about life" },
+  { icon: "🎶", reason: "How our hearts beat in sync" },
+  { icon: "🔐", reason: "You're the keeper of all my secrets" },
+  { icon: "🌟", reason: "How you believe in me when I don't" },
+  { icon: "🎯", reason: "You're my goal, my destination, my purpose" },
+  { icon: "🦸", reason: "You're my superhero in a white coat" },
+  { icon: "📖", reason: "Every day with you is a new chapter" },
+  { icon: "🎸", reason: "How perfectly we harmonize together" },
+  { icon: "🌴", reason: "Dreaming of beaches and getaways with you" },
+  { icon: "💪", reason: "How you handle three breakups and still came back" },
+  { icon: "🎢", reason: "This rollercoaster journey we're on together" },
+  { icon: "🌠", reason: "You make all my wishes come true" },
+  { icon: "🎭", reason: "Accepting all my moods and phases" },
+  { icon: "🔥", reason: "The fire you've ignited in my soul" },
+  { icon: "🎨", reason: "How you paint my life with love" },
+  { icon: "🌺", reason: "Your nurturing nature with everyone" },
+  { icon: "⚖️", reason: "How you balance being tough and tender" },
+  { icon: "🎪", reason: "Making me laugh till my stomach hurts" },
+  { icon: "💝", reason: "Your thoughtful surprises always" },
+  { icon: "🌟", reason: "How you sparkle even on your worst days" },
+  { icon: "🎵", reason: "The rhythm of our relationship" },
+  { icon: "🏔️", reason: "Conquering life's mountains together" },
+  { icon: "🌊", reason: "The depth of your emotions" },
+  { icon: "🎯", reason: "How you never miss a chance to show you care" },
+  { icon: "💖", reason: "Your big heart that has room for everyone" },
+  { icon: "🎪", reason: "How life is never boring with you" },
+  { icon: "🌹", reason: "You're the answer to prayers I didn't know I had" },
+  { icon: "✨", reason: "The way you make everything feel special" },
+  { icon: "🎁", reason: "You're the best gift life ever gave me" },
+  { icon: "♾️", reason: "My love for you is infinite and beyond" }
+];
+---
+
+<section class="my-12 opacity-0 animate-on-scroll">
+  <div class="text-center">
+    <button 
+      id="reasons-btn"
+      class="bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 text-white font-semibold px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg"
+    >
+      💕 100 Reasons I Love You 💕
+    </button>
+  </div>
+</section>
+
+<!-- Full Screen Card Deck Overlay -->
+<div id="reasons-overlay" class="hidden fixed inset-0 bg-gradient-to-br from-rose-950 via-pink-950 to-purple-950 z-50 overflow-hidden">
+  <!-- Close Button -->
+  <button 
+    id="close-reasons" 
+    class="absolute top-4 right-4 z-50 bg-white/20 backdrop-blur text-white rounded-full p-3 hover:bg-white/30 transition-all"
+    aria-label="Close"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+
+  <!-- Progress Counter -->
+  <div class="absolute top-4 left-4 z-50 bg-white/20 backdrop-blur px-4 py-2 rounded-full text-white font-semibold">
+    <span id="card-counter">1</span> / 100
+  </div>
+
+  <!-- Card Container -->
+  <div class="flex items-center justify-center min-h-screen px-4 py-20">
+    <div class="relative w-full max-w-md">
+      
+      <!-- Card -->
+      <div id="reason-card" class="bg-gradient-to-br from-white to-rose-50 rounded-3xl shadow-2xl p-8 text-center transform transition-all duration-500 hover:scale-105">
+        <div class="text-7xl mb-6" id="card-icon">💖</div>
+        <p class="text-gray-800 text-xl leading-relaxed font-medium mb-8" id="card-text">
+          The way you care for me like no one else ever has
+        </p>
+        
+        <!-- Card Number -->
+        <div class="text-rose-400 text-sm font-semibold mb-6">
+          Reason #<span id="reason-number">1</span>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex gap-4 justify-center">
+          <button 
+            id="prev-btn"
+            class="bg-gradient-to-r from-rose-400 to-pink-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            ← Previous
+          </button>
+          <button 
+            id="next-btn"
+            class="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all"
+          >
+            Next →
+          </button>
+        </div>
+
+        <!-- Shuffle Button -->
+        <button 
+          id="shuffle-btn"
+          class="mt-4 text-rose-500 hover:text-rose-700 font-medium text-sm transition-colors"
+        >
+          🔀 Shuffle & Surprise Me
+        </button>
+      </div>
+
+      <!-- Floating hearts decoration -->
+      <div class="absolute -top-10 -left-10 text-6xl opacity-20 animate-bounce">💕</div>
+      <div class="absolute -bottom-10 -right-10 text-6xl opacity-20 animate-bounce" style="animation-delay: 0.5s;">💖</div>
+    </div>
+  </div>
+
+  <!-- Completion Message -->
+  <div id="completion-message" class="hidden absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+    <div class="bg-white rounded-3xl p-8 text-center max-w-md mx-4 animate-scale-in">
+      <div class="text-6xl mb-4">🎉</div>
+      <h3 class="text-3xl font-cursive text-rose-600 mb-4">
+        You've seen all 100 reasons!
+      </h3>
+      <p class="text-gray-700 mb-6">
+        But there are countless more reasons I love you...
+      </p>
+      <button 
+        id="restart-btn"
+        class="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all"
+      >
+        Read Again 💕
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+
+  /* Card flip effect */
+  #reason-card.flipping {
+    animation: flip 0.6s ease-in-out;
+  }
+
+  @keyframes flip {
+    0% { transform: rotateY(0deg) scale(1); }
+    50% { transform: rotateY(90deg) scale(0.95); }
+    100% { transform: rotateY(0deg) scale(1); }
+  }
+</style>
+
+<script define:vars={{ reasons }}>
+  const reasonsBtn = document.getElementById('reasons-btn');
+  const overlay = document.getElementById('reasons-overlay');
+  const closeBtn = document.getElementById('close-reasons');
+  const card = document.getElementById('reason-card');
+  const cardIcon = document.getElementById('card-icon');
+  const cardText = document.getElementById('card-text');
+  const reasonNumber = document.getElementById('reason-number');
+  const cardCounter = document.getElementById('card-counter');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const shuffleBtn = document.getElementById('shuffle-btn');
+  const completionMsg = document.getElementById('completion-message');
+  const restartBtn = document.getElementById('restart-btn');
+
+  let currentIndex = 0;
+  let viewedReasons = new Set([0]);
+  let shuffledReasons = [...reasons];
+
+  // Shuffle array
+  function shuffle(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  }
+
+  // Update card display
+  function updateCard() {
+    const reason = shuffledReasons[currentIndex];
+    
+    // Add flip animation
+    card.classList.add('flipping');
+    
+    setTimeout(() => {
+      cardIcon.textContent = reason.icon;
+      cardText.textContent = reason.reason;
+      reasonNumber.textContent = currentIndex + 1;
+      cardCounter.textContent = currentIndex + 1;
+      
+      // Track viewed reasons
+      viewedReasons.add(currentIndex);
+      
+      // Update button states
+      prevBtn.disabled = currentIndex === 0;
+      
+      // Check if all viewed
+      if (viewedReasons.size === 100) {
+        setTimeout(() => {
+          completionMsg.classList.remove('hidden');
+        }, 500);
+      }
+    }, 300);
+    
+    setTimeout(() => {
+      card.classList.remove('flipping');
+    }, 600);
+  }
+
+  // Open overlay
+  function openReasons() {
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    currentIndex = 0;
+    viewedReasons = new Set([0]);
+    updateCard();
+  }
+
+  // Close overlay
+  function closeReasons() {
+    overlay.classList.add('hidden');
+    completionMsg.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Navigation
+  function nextReason() {
+    if (currentIndex < 99) {
+      currentIndex++;
+      updateCard();
+    }
+  }
+
+  function prevReason() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCard();
+    }
+  }
+
+  // Shuffle and show random
+  function shuffleReasons() {
+    shuffledReasons = shuffle(reasons);
+    currentIndex = 0;
+    viewedReasons = new Set([0]);
+    updateCard();
+  }
+
+  // Restart
+  function restart() {
+    completionMsg.classList.add('hidden');
+    currentIndex = 0;
+    viewedReasons = new Set([0]);
+    updateCard();
+  }
+
+  // Event Listeners
+  if (reasonsBtn) reasonsBtn.addEventListener('click', openReasons);
+  if (closeBtn) closeBtn.addEventListener('click', closeReasons);
+  if (nextBtn) nextBtn.addEventListener('click', nextReason);
+  if (prevBtn) prevBtn.addEventListener('click', prevReason);
+  if (shuffleBtn) shuffleBtn.addEventListener('click', shuffleReasons);
+  if (restartBtn) restartBtn.addEventListener('click', restart);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('hidden')) {
+      if (e.key === 'ArrowRight') nextReason();
+      if (e.key === 'ArrowLeft') prevReason();
+      if (e.key === 'Escape') closeReasons();
+    }
+  });
+
+  // Swipe support for mobile
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  card?.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  card?.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    if (touchEndX < touchStartX - 50) nextReason(); // Swipe left
+    if (touchEndX > touchStartX + 50) prevReason(); // Swipe right
+  }
+</script>
