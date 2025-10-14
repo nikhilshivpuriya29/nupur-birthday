@@ -1,30 +1,231 @@
 ---
-// Optional voice message player
+// Password-protected voice message player - NO HINTS
 ---
 
 <section class="my-12 opacity-0 animate-on-scroll">
   <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-2xl shadow-xl p-6 text-white text-center">
-    <h2 class="text-xl font-semibold mb-4">
-      A Message From My Heart
-    </h2>
     
-    <p class="text-rose-100 text-sm mb-6">
-      Press play to hear something special
-    </p>
-    
-    <audio 
-      id="voice-player"
-      controls 
-      preload="none"
-      class="w-full max-w-sm mx-auto rounded-lg"
-      style="filter: brightness(1.1);"
-    >
-      <source src="/audio/voice-note_Audio.mp3" type="audio/mpeg">
-      Your browser doesn't support audio playback.
-    </audio>
-    
-    <p class="text-rose-100 text-xs mt-4 italic">
-      Made with love, just for you 💕
-    </p>
+    <!-- Locked State -->
+    <div id="locked-state">
+      <div class="text-5xl mb-4">🔒</div>
+      <h2 class="text-xl font-semibold mb-4">
+        Unlock My Voice Message
+      </h2>
+      
+      <p class="text-rose-100 text-sm mb-6">
+        Answer this to hear something special from me...
+      </p>
+      
+      <!-- Question -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 mb-4">
+        <p class="text-lg font-medium mb-4">
+          Fill in the blank:
+        </p>
+        <p class="text-2xl font-cursive mb-4">
+          I love ________
+        </p>
+        
+        <!-- Input Field -->
+        <input 
+          type="text"
+          id="password-input"
+          placeholder="Type your answer here..."
+          class="w-full bg-white text-gray-800 px-4 py-3 rounded-lg text-center font-medium focus:outline-none focus:ring-2 focus:ring-rose-300 transition-all"
+          autocomplete="off"
+        />
+      </div>
+      
+      <!-- Submit Button -->
+      <button 
+        id="unlock-btn"
+        class="bg-white text-rose-600 font-semibold px-8 py-3 rounded-full hover:bg-rose-50 transition-all transform hover:scale-105 shadow-lg"
+      >
+        🔓 Unlock
+      </button>
+      
+      <!-- Error Message -->
+      <p id="error-msg" class="hidden text-rose-200 text-sm mt-4 animate-shake">
+        ❌ Hmm, that's not it. Try again...
+      </p>
+    </div>
+
+    <!-- Unlocked State (Hidden Initially) -->
+    <div id="unlocked-state" class="hidden">
+      <div class="text-5xl mb-4 animate-bounce">🎉</div>
+      <h2 class="text-xl font-semibold mb-4">
+        You Unlocked It! 💕
+      </h2>
+      
+      <p class="text-rose-100 text-sm mb-6">
+        Press play to hear something special
+      </p>
+      
+      <audio 
+        id="voice-player"
+        controls 
+        preload="none"
+        class="w-full max-w-sm mx-auto rounded-lg"
+        style="filter: brightness(1.1);"
+      >
+        <source src="/audio/voice-note_Audio.mp3" type="audio/mpeg">
+        Your browser doesn't support audio playback.
+      </audio>
+      
+      <p class="text-rose-100 text-xs mt-4 italic">
+        Made with love, just for you 💕
+      </p>
+    </div>
+
   </div>
 </section>
+
+<style>
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+
+  /* Smooth transitions */
+  #locked-state, #unlocked-state {
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  /* Input focus effect */
+  #password-input:focus {
+    transform: scale(1.02);
+  }
+</style>
+
+<script>
+  const passwordInput = document.getElementById('password-input');
+  const unlockBtn = document.getElementById('unlock-btn');
+  const lockedState = document.getElementById('locked-state');
+  const unlockedState = document.getElementById('unlocked-state');
+  const errorMsg = document.getElementById('error-msg');
+
+  const correctAnswer = "Beaches"; // Exact match required
+
+  // Check password
+  function checkPassword() {
+    const userAnswer = passwordInput?.value.trim();
+    
+    if (userAnswer === correctAnswer) {
+      // Correct! Unlock the voice note
+      unlockVoiceNote();
+    } else {
+      // Wrong answer
+      showError();
+      
+      // Clear input and shake it
+      if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    }
+  }
+
+  // Show error message
+  function showError() {
+    if (errorMsg) {
+      errorMsg.classList.remove('hidden');
+      errorMsg.classList.add('animate-shake');
+      
+      setTimeout(() => {
+        errorMsg.classList.add('hidden');
+        errorMsg.classList.remove('animate-shake');
+      }, 3000);
+    }
+  }
+
+  // Unlock voice note
+  function unlockVoiceNote() {
+    if (lockedState && unlockedState) {
+      // Fade out locked state
+      lockedState.style.opacity = '0';
+      
+      setTimeout(() => {
+        lockedState.classList.add('hidden');
+        unlockedState.classList.remove('hidden');
+        
+        // Fade in unlocked state
+        setTimeout(() => {
+          unlockedState.style.opacity = '1';
+        }, 50);
+        
+        // Create confetti celebration
+        createConfetti();
+      }, 500);
+    }
+  }
+
+  // Confetti effect
+  function createConfetti() {
+    const colors = ['#fb7185', '#f43f5e', '#fda4af', '#fecdd3'];
+    const container = unlockedState;
+    
+    for (let i = 0; i < 30; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'absolute';
+      confetti.style.width = '8px';
+      confetti.style.height = '8px';
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.left = '50%';
+      confetti.style.top = '30%';
+      confetti.style.borderRadius = '50%';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.zIndex = '10';
+      
+      container?.appendChild(confetti);
+      
+      const angle = (Math.PI * 2 * i) / 30;
+      const velocity = 80 + Math.random() * 80;
+      const tx = Math.cos(angle) * velocity;
+      const ty = Math.sin(angle) * velocity;
+      
+      confetti.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+      ], {
+        duration: 800 + Math.random() * 400,
+        easing: 'cubic-bezier(0, .9, .57, 1)'
+      }).onfinish = () => confetti.remove();
+    }
+  }
+
+  // Event Listeners
+  if (unlockBtn) {
+    unlockBtn.addEventListener('click', checkPassword);
+  }
+
+  if (passwordInput) {
+    // Allow Enter key to submit
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
+    
+    // Focus input on load
+    setTimeout(() => {
+      passwordInput.focus();
+    }, 500);
+  }
+</script>
