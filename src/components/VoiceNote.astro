@@ -1,5 +1,5 @@
 ---
-// Password-protected voice message player - NO HINTS
+// Password-protected voice message player - NO AUTO-FOCUS
 ---
 
 <section class="my-12 opacity-0 animate-on-scroll">
@@ -137,7 +137,6 @@
       // Clear input and shake it
       if (passwordInput) {
         passwordInput.value = '';
-        passwordInput.focus();
       }
     }
   }
@@ -222,10 +221,5 @@
         checkPassword();
       }
     });
-    
-    // Focus input on load
-    setTimeout(() => {
-      passwordInput.focus();
-    }, 500);
   }
 </script>
