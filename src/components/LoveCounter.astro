@@ -1,0 +1,237 @@
+---
+// Infinite Love Counter Component
+---
+
+<section class="my-12 opacity-0 animate-on-scroll">
+  <div class="text-center">
+    <button 
+      id="love-counter-btn"
+      class="bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 text-white font-semibold px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 text-lg"
+    >
+      💖 Do you know how much your Nikki loves you? 💖
+    </button>
+  </div>
+</section>
+
+<!-- Full Screen Love Counter Overlay -->
+<div id="love-counter-overlay" class="hidden fixed inset-0 bg-gradient-to-br from-pink-900 via-rose-900 to-red-900 z-50 flex items-center justify-center overflow-hidden">
+  <!-- Close Button -->
+  <button 
+    id="close-counter" 
+    class="absolute top-4 right-4 z-50 bg-white/20 backdrop-blur text-white rounded-full p-3 hover:bg-white/30 transition-all"
+    aria-label="Close counter"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+
+  <!-- Heart Particles Container -->
+  <div id="hearts-container" class="absolute inset-0 pointer-events-none"></div>
+
+  <!-- Counter Display -->
+  <div class="relative z-10 text-center px-4">
+    <div id="counter-stage" class="counter-counting">
+      <p class="text-white/80 text-xl mb-4 font-medium">
+        Counting...
+      </p>
+      <div class="text-8xl font-bold text-white drop-shadow-2xl mb-6" id="love-number">
+        0
+      </div>
+      <p class="text-rose-200 text-lg animate-pulse">
+        ∞ × ∞ × ∞...
+      </p>
+    </div>
+
+    <!-- Final Message (hidden initially) -->
+    <div id="final-message" class="hidden">
+      <div class="animate-scale-in">
+        <div class="text-6xl mb-6">💝</div>
+        <h2 class="text-4xl font-cursive text-white mb-6">
+          This much counting<br>hasn't been discovered yet...
+        </h2>
+        <p class="text-2xl text-rose-200 mb-4">
+          This much your Nikki loves you
+        </p>
+        <p class="text-6xl animate-heartbeat">
+          ♾️❤️
+        </p>
+        <p class="text-rose-300 mt-8 text-lg italic">
+          Forever and always, Nupur 💕
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Heart Particle Styles */
+  .heart-particle {
+    position: absolute;
+    font-size: 24px;
+    pointer-events: none;
+    animation: float-up linear forwards;
+    opacity: 0;
+  }
+
+  @keyframes float-up {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(0.5) rotate(0deg);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(-300px) scale(1.2) rotate(180deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-600px) scale(0.8) rotate(360deg);
+    }
+  }
+
+  /* Counter Number Pulse */
+  #love-number {
+    animation: number-pulse 0.1s infinite;
+  }
+
+  @keyframes number-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Final Message Animation */
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* Heartbeat Animation */
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.15); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.2); }
+  }
+
+  .animate-heartbeat {
+    animation: heartbeat 1.5s infinite;
+  }
+</style>
+
+<script>
+  const loveBtn = document.getElementById('love-counter-btn');
+  const overlay = document.getElementById('love-counter-overlay');
+  const closeBtn = document.getElementById('close-counter');
+  const counterStage = document.getElementById('counter-stage');
+  const finalMessage = document.getElementById('final-message');
+  const loveNumber = document.getElementById('love-number');
+  const heartsContainer = document.getElementById('hearts-container');
+
+  // Heart colors
+  const heartColors = ['#ff6b9d', '#ff1493', '#ff69b4', '#ff85a2', '#ffc0cb', '#ff4d94', '#e91e63'];
+  const heartEmojis = ['💖', '💕', '💗', '💓', '💝', '💘', '❤️', '💞'];
+
+  let countingInterval;
+  let heartsInterval;
+  let counter = 0;
+
+  // Create floating hearts
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart-particle';
+    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    
+    heartsContainer.appendChild(heart);
+    
+    // Remove after animation
+    setTimeout(() => {
+      heart.remove();
+    }, 4000);
+  }
+
+  // Start counting animation
+  function startCounting() {
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    // Reset
+    counter = 0;
+    loveNumber.textContent = '0';
+    counterStage.classList.remove('hidden');
+    finalMessage.classList.add('hidden');
+
+    // Rapid counting with increasing speed
+    let speed = 50;
+    countingInterval = setInterval(() => {
+      counter += Math.floor(Math.random() * 10000) + 5000;
+      loveNumber.textContent = counter.toLocaleString();
+      
+      // Speed up over time
+      speed = Math.max(30, speed - 2);
+    }, speed);
+
+    // Burst hearts continuously
+    heartsInterval = setInterval(() => {
+      // Create multiple hearts at once
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => createHeart(), i * 50);
+      }
+    }, 200);
+
+    // Stop after 4 seconds and show final message
+    setTimeout(() => {
+      clearInterval(countingInterval);
+      clearInterval(heartsInterval);
+      
+      // Show final message
+      counterStage.classList.add('hidden');
+      finalMessage.classList.remove('hidden');
+      
+      // Create burst of hearts
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => createHeart(), i * 100);
+      }
+    }, 4000);
+  }
+
+  // Close overlay
+  function closeOverlay() {
+    overlay.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    clearInterval(countingInterval);
+    clearInterval(heartsInterval);
+    
+    // Clear all hearts
+    heartsContainer.innerHTML = '';
+  }
+
+  // Event Listeners
+  if (loveBtn) {
+    loveBtn.addEventListener('click', startCounting);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeOverlay);
+  }
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.classList.contains('hidden')) {
+      closeOverlay();
+    }
+  });
+</script>
