@@ -1,54 +1,226 @@
----
-// Photo gallery with lazy loading and LQIP
-const photos = [
-  { src: '/images/photo-1.jpg', alt: 'Our moment together 1' },
-  { src: '/images/photo-2.jpg', alt: 'Our moment together 2' },
-  { src: '/images/photo-3.jpg', alt: 'Our moment together 3' },
-  { src: '/images/photo-4.jpg', alt: 'Our moment together 4' },
-  { src: '/images/photo-5.jpg', alt: 'Our moment together 5' },
-  { src: '/images/photo-6.jpg', alt: 'Our moment together 6' },
-  { src: '/images/photo-7.jpg', alt: 'Our moment together 7' },
-  { src: '/images/photo-8.jpg', alt: 'Our moment together 8' },
-  { src: '/images/photo-9.jpg', alt: 'Our moment together 9' },
-  { src: '/images/photo-10.png', alt: 'Our moment together 10' },
-  { src: '/images/photo-11.jpg', alt: 'Our moment together 11' },
-  { src: '/images/photo-12.jpg', alt: 'Our moment together 12' }
-];
----
-
+<!-- Password-protected Photo Gallery -->
 <section class="my-12 opacity-0 animate-on-scroll">
-  <h2 class="text-2xl font-semibold text-rose-800 mb-6 text-center">
-    Our Journey in Pictures
-  </h2>
-  
-  <div class="grid grid-cols-2 gap-3">
-    {photos.map((photo, i) => (
-      <div class="relative aspect-square rounded-lg overflow-hidden shadow-md bg-rose-100 photo-item">
-        <img 
-          src={photo.src}
-          alt={photo.alt}
-          loading="lazy"
-          class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-          decoding="async"
+  <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-2xl shadow-xl p-6 text-white text-center">
+
+    <!-- Locked State -->
+    <div id="locked-gallery">
+      <div class="text-5xl mb-4">🔒</div>
+      <h2 class="text-xl font-semibold mb-4">
+        Unlock Our Photo Memories
+      </h2>
+
+      <p class="text-rose-100 text-sm mb-6">
+        Answer this to see our special pictures 💕
+      </p>
+
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 mb-4">
+        <p class="text-lg font-medium mb-4">Fill in the blank:</p>
+        <p class="text-2xl font-cursive mb-4">I love ________</p>
+
+        <input 
+          type="text"
+          id="gallery-password"
+          placeholder="Type your answer here..."
+          class="w-full bg-white text-gray-800 px-4 py-3 rounded-lg text-center font-medium focus:outline-none focus:ring-2 focus:ring-rose-300 transition-all"
+          autocomplete="off"
         />
       </div>
-    ))}
+
+      <button 
+        id="gallery-unlock-btn"
+        class="bg-white text-rose-600 font-semibold px-8 py-3 rounded-full hover:bg-rose-50 transition-all transform hover:scale-105 shadow-lg"
+      >
+        🔓 Unlock
+      </button>
+
+      <p id="gallery-error" class="hidden text-rose-200 text-sm mt-4 animate-shake">
+        ❌ Hmm, that's not it. Try again...
+      </p>
+    </div>
+
+    <!-- Unlocked State (Hidden Initially) -->
+    <div id="unlocked-gallery" class="hidden">
+      <div class="text-5xl mb-4 animate-bounce">📸</div>
+      <h2 class="text-xl font-semibold mb-4">
+        Our Journey in Pictures 💞
+      </h2>
+
+      <div class="grid grid-cols-2 gap-3 text-gray-800">
+        <!-- Gallery Images -->
+        <div id="photo-gallery" class="w-full">
+          <script>
+            const photos = [
+              { src: '/images/photo-1.jpg', alt: 'Our moment together 1' },
+              { src: '/images/photo-2.jpg', alt: 'Our moment together 2' },
+              { src: '/images/photo-3.jpg', alt: 'Our moment together 3' },
+              { src: '/images/photo-4.jpg', alt: 'Our moment together 4' },
+              { src: '/images/photo-5.jpg', alt: 'Our moment together 5' },
+              { src: '/images/photo-6.jpg', alt: 'Our moment together 6' },
+              { src: '/images/photo-7.jpg', alt: 'Our moment together 7' },
+              { src: '/images/photo-8.jpg', alt: 'Our moment together 8' },
+              { src: '/images/photo-9.jpg', alt: 'Our moment together 9' },
+              { src: '/images/photo-10.png', alt: 'Our moment together 10' },
+              { src: '/images/photo-11.jpg', alt: 'Our moment together 11' },
+              { src: '/images/photo-12.jpg', alt: 'Our moment together 12' }
+            ];
+
+            document.addEventListener("DOMContentLoaded", () => {
+              const gallery = document.getElementById('photo-gallery');
+              photos.forEach(photo => {
+                const div = document.createElement('div');
+                div.className = "relative aspect-square rounded-lg overflow-hidden shadow-md bg-rose-100 photo-item";
+                div.innerHTML = `
+                  <img 
+                    src="${photo.src}" 
+                    alt="${photo.alt}" 
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                `;
+                gallery.appendChild(div);
+              });
+
+              // Lazy loading with Intersection Observer
+              const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                    const img = entry.target.querySelector('img');
+                    if (img) img.classList.add('loaded');
+                    imageObserver.unobserve(entry.target);
+                  }
+                });
+              }, { rootMargin: '50px' });
+
+              document.querySelectorAll('.photo-item').forEach(item => imageObserver.observe(item));
+            });
+          </script>
+        </div>
+      </div>
+
+      <p class="text-rose-100 text-xs mt-6 italic">
+        Every picture holds a piece of us 💗
+      </p>
+    </div>
+
   </div>
 </section>
 
+<style>
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+
+  #locked-gallery, #unlocked-gallery {
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  #gallery-password:focus {
+    transform: scale(1.02);
+  }
+
+  .photo-item {
+    transition: transform 0.2s ease;
+  }
+</style>
+
 <script>
-  // Intersection observer for progressive image loading
-  const imageObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const img = entry.target.querySelector('img');
-        if (img) {
-          img.classList.add('loaded');
-        }
-        imageObserver.unobserve(entry.target);
-      }
+  const galleryInput = document.getElementById('gallery-password');
+  const galleryUnlockBtn = document.getElementById('gallery-unlock-btn');
+  const lockedGallery = document.getElementById('locked-gallery');
+  const unlockedGallery = document.getElementById('unlocked-gallery');
+  const galleryError = document.getElementById('gallery-error');
+
+  const correctGalleryPassword = "Beaches"; // same password as voice note
+
+  function checkGalleryPassword() {
+    const userAnswer = galleryInput?.value.trim();
+
+    if (userAnswer === correctGalleryPassword) {
+      unlockGallery();
+    } else {
+      showGalleryError();
+      if (galleryInput) galleryInput.value = '';
+    }
+  }
+
+  function showGalleryError() {
+    if (galleryError) {
+      galleryError.classList.remove('hidden');
+      galleryError.classList.add('animate-shake');
+      setTimeout(() => {
+        galleryError.classList.add('hidden');
+        galleryError.classList.remove('animate-shake');
+      }, 3000);
+    }
+  }
+
+  function unlockGallery() {
+    if (lockedGallery && unlockedGallery) {
+      lockedGallery.style.opacity = '0';
+      setTimeout(() => {
+        lockedGallery.classList.add('hidden');
+        unlockedGallery.classList.remove('hidden');
+        setTimeout(() => {
+          unlockedGallery.style.opacity = '1';
+        }, 50);
+        createConfetti();
+      }, 500);
+    }
+  }
+
+  // Confetti Celebration
+  function createConfetti() {
+    const colors = ['#fb7185', '#f43f5e', '#fda4af', '#fecdd3'];
+    const container = unlockedGallery;
+    for (let i = 0; i < 30; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'absolute';
+      confetti.style.width = '8px';
+      confetti.style.height = '8px';
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.left = '50%';
+      confetti.style.top = '30%';
+      confetti.style.borderRadius = '50%';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.zIndex = '10';
+      container?.appendChild(confetti);
+      const angle = (Math.PI * 2 * i) / 30;
+      const velocity = 80 + Math.random() * 80;
+      const tx = Math.cos(angle) * velocity;
+      const ty = Math.sin(angle) * velocity;
+      confetti.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+      ], {
+        duration: 800 + Math.random() * 400,
+        easing: 'cubic-bezier(0, .9, .57, 1)'
+      }).onfinish = () => confetti.remove();
+    }
+  }
+
+  if (galleryUnlockBtn) {
+    galleryUnlockBtn.addEventListener('click', checkGalleryPassword);
+  }
+
+  if (galleryInput) {
+    galleryInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkGalleryPassword();
     });
-  }, { rootMargin: '50px' });
-  
-  document.querySelectorAll('.photo-item').forEach(item => imageObserver.observe(item));
+  }
 </script>
