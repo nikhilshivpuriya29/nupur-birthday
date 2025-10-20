@@ -1,55 +1,6 @@
-<!-- Password-protected Photo Gallery -->
-<section class="my-12 opacity-0 animate-on-scroll">
-  <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-2xl shadow-xl p-6 text-white text-center">
-
-    <!-- Locked State -->
-    <div id="locked-gallery">
-      <div class="text-5xl mb-4">🔒</div>
-      <h2 class="text-xl font-semibold mb-4">
-        Unlock Our Photo Memories
-      </h2>
-
-      <p class="text-rose-100 text-sm mb-6">
-        Answer this to see our special pictures 💕
-      </p>
-
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 mb-4">
-        <p class="text-lg font-medium mb-4">Fill in the blank:</p>
-        <p class="text-2xl font-cursive mb-4">I love ________</p>
-
-        <input 
-          type="text"
-          id="gallery-password"
-          placeholder="Type your answer here..."
-          class="w-full bg-white text-gray-800 px-4 py-3 rounded-lg text-center font-medium focus:outline-none focus:ring-2 focus:ring-rose-300 transition-all"
-          autocomplete="off"
-        />
-      </div>
-
-      <button 
-        id="gallery-unlock-btn"
-        class="bg-white text-rose-600 font-semibold px-8 py-3 rounded-full hover:bg-rose-50 transition-all transform hover:scale-105 shadow-lg"
-      >
-        🔓 Unlock
-      </button>
-
-      <p id="gallery-error" class="hidden text-rose-200 text-sm mt-4 animate-shake">
-        ❌ Hmm, that's not it. Try again...
-      </p>
-    </div>
-
-    <!-- Unlocked State (Hidden Initially) -->
-    <div id="unlocked-gallery" class="hidden">
-      <div class="text-5xl mb-4 animate-bounce">📸</div>
-      <h2 class="text-xl font-semibold mb-4">
-        Our Journey in Pictures 💞
-      </h2>
-
-      <div class="grid grid-cols-2 gap-3 text-gray-800">
-        <!-- Gallery Images -->
-        <div id="photo-gallery" class="w-full">
-          <script>
-            const photos = [
+---
+// Password-protected photo gallery
+ const photos = [
               { src: '/images/photo-1.jpg', alt: 'Our moment together 1' },
               { src: '/images/photo-2.jpg', alt: 'Our moment together 2' },
               { src: '/images/photo-3.jpg', alt: 'Our moment together 3' },
@@ -63,46 +14,73 @@
               { src: '/images/photo-11.jpg', alt: 'Our moment together 11' },
               { src: '/images/photo-12.jpg', alt: 'Our moment together 12' }
             ];
+---
 
-            document.addEventListener("DOMContentLoaded", () => {
-              const gallery = document.getElementById('photo-gallery');
-              photos.forEach(photo => {
-                const div = document.createElement('div');
-                div.className = "relative aspect-square rounded-lg overflow-hidden shadow-md bg-rose-100 photo-item";
-                div.innerHTML = `
-                  <img 
-                    src="${photo.src}" 
-                    alt="${photo.alt}" 
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  />
-                `;
-                gallery.appendChild(div);
-              });
+<section class="my-12 opacity-0 animate-on-scroll">
+  <h2 class="text-2xl font-semibold text-rose-800 mb-6 text-center">
+    Our Journey in Pictures
+  </h2>
 
-              // Lazy loading with Intersection Observer
-              const imageObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                  if (entry.isIntersecting) {
-                    const img = entry.target.querySelector('img');
-                    if (img) img.classList.add('loaded');
-                    imageObserver.unobserve(entry.target);
-                  }
-                });
-              }, { rootMargin: '50px' });
-
-              document.querySelectorAll('.photo-item').forEach(item => imageObserver.observe(item));
-            });
-          </script>
-        </div>
-      </div>
-
-      <p class="text-rose-100 text-xs mt-6 italic">
-        Every picture holds a piece of us 💗
+  <!-- Locked State -->
+  <div id="gallery-locked" class="bg-gradient-to-br from-rose-100 to-pink-100 rounded-2xl shadow-xl p-8 text-center">
+    <div class="text-6xl mb-4">🔒</div>
+    <h3 class="text-xl font-semibold text-rose-700 mb-4">
+      Unlock Our Memories
+    </h3>
+    
+    <p class="text-rose-600 text-sm mb-6">
+      Answer this question to see our precious moments together...
+    </p>
+    
+    <!-- Question -->
+    <div class="bg-white/50 rounded-xl p-6 mb-4 max-w-md mx-auto">
+      <p class="text-lg font-medium text-gray-800 mb-4">
+        What I want as my Bday gift?
       </p>
+      
+      <!-- Input Field -->
+      <input 
+        type="text"
+        id="gallery-password"
+        placeholder="Type your answer..."
+        class="w-full bg-white text-gray-800 px-4 py-3 rounded-lg text-center font-medium focus:outline-none focus:ring-2 focus:ring-rose-400 transition-all shadow-sm"
+        autocomplete="off"
+      />
     </div>
+    
+    <!-- Unlock Button -->
+    <button 
+      id="unlock-gallery-btn"
+      class="bg-gradient-to-r from-rose-500 to-pink-500 text-white font-semibold px-8 py-3 rounded-full hover:shadow-lg transition-all transform hover:scale-105"
+    >
+      🔓 Unlock Photos
+    </button>
+    
+    <!-- Error Message -->
+    <p id="gallery-error" class="hidden text-rose-600 text-sm mt-4 animate-shake">
+      ❌ Not quite! Try again...
+    </p>
+  </div>
 
+  <!-- Unlocked Gallery (Hidden Initially) -->
+  <div id="gallery-unlocked" class="hidden">
+    <div class="text-center mb-6 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-6 rounded-full inline-block shadow-lg">
+      <span class="text-sm font-medium">✨ Unlocked! Our Beautiful Memories 💕</span>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-3">
+      {photos.map((photo, i) => (
+        <div class="relative aspect-square rounded-lg overflow-hidden shadow-md bg-rose-100 photo-item opacity-0">
+          <img 
+            src={photo.src}
+            alt={photo.alt}
+            loading="lazy"
+            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+            decoding="async"
+          />
+        </div>
+      ))}
+    </div>
   </div>
 </section>
 
@@ -117,110 +95,132 @@
     animation: shake 0.5s ease-in-out;
   }
 
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-  }
-
-  .animate-bounce {
-    animation: bounce 1s infinite;
-  }
-
-  #locked-gallery, #unlocked-gallery {
-    transition: opacity 0.5s ease-in-out;
-  }
-
-  #gallery-password:focus {
-    transform: scale(1.02);
+  @keyframes fadeInPhoto {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .photo-item {
-    transition: transform 0.2s ease;
+    animation: fadeInPhoto 0.5s ease-out forwards;
   }
+
+  .photo-item:nth-child(1) { animation-delay: 0.1s; }
+  .photo-item:nth-child(2) { animation-delay: 0.2s; }
+  .photo-item:nth-child(3) { animation-delay: 0.3s; }
+  .photo-item:nth-child(4) { animation-delay: 0.4s; }
+  .photo-item:nth-child(5) { animation-delay: 0.5s; }
+  .photo-item:nth-child(6) { animation-delay: 0.6s; }
+  .photo-item:nth-child(7) { animation-delay: 0.7s; }
+  .photo-item:nth-child(8) { animation-delay: 0.8s; }
+  .photo-item:nth-child(9) { animation-delay: 0.9s; }
+  .photo-item:nth-child(10) { animation-delay: 1s; }
+  .photo-item:nth-child(11) { animation-delay: 1.1s; }
+  .photo-item:nth-child(12) { animation-delay: 1.2s; }
 </style>
 
 <script>
-  const galleryInput = document.getElementById('gallery-password');
-  const galleryUnlockBtn = document.getElementById('gallery-unlock-btn');
-  const lockedGallery = document.getElementById('locked-gallery');
-  const unlockedGallery = document.getElementById('unlocked-gallery');
-  const galleryError = document.getElementById('gallery-error');
+  const galleryPassword = document.getElementById('gallery-password');
+  const unlockBtn = document.getElementById('unlock-gallery-btn');
+  const lockedGallery = document.getElementById('gallery-locked');
+  const unlockedGallery = document.getElementById('gallery-unlocked');
+  const errorMsg = document.getElementById('gallery-error');
 
-  const correctGalleryPassword = "Beaches"; // same password as voice note
+  // ⚠️ REPLACE THIS WITH THE ACTUAL ANSWER!
+  const correctAnswer = "PUT_ANSWER_HERE"; // CHANGE THIS!
 
   function checkGalleryPassword() {
-    const userAnswer = galleryInput?.value.trim();
-
-    if (userAnswer === correctGalleryPassword) {
+    const userAnswer = galleryPassword?.value.trim();
+    
+    if (userAnswer === correctAnswer) {
+      // Correct! Unlock gallery
       unlockGallery();
     } else {
+      // Wrong answer
       showGalleryError();
-      if (galleryInput) galleryInput.value = '';
+      if (galleryPassword) {
+        galleryPassword.value = '';
+      }
     }
   }
 
   function showGalleryError() {
-    if (galleryError) {
-      galleryError.classList.remove('hidden');
-      galleryError.classList.add('animate-shake');
+    if (errorMsg) {
+      errorMsg.classList.remove('hidden');
+      errorMsg.classList.add('animate-shake');
+      
       setTimeout(() => {
-        galleryError.classList.add('hidden');
-        galleryError.classList.remove('animate-shake');
+        errorMsg.classList.add('hidden');
+        errorMsg.classList.remove('animate-shake');
       }, 3000);
     }
   }
 
   function unlockGallery() {
     if (lockedGallery && unlockedGallery) {
+      // Smooth transition
       lockedGallery.style.opacity = '0';
+      lockedGallery.style.transform = 'scale(0.95)';
+      lockedGallery.style.transition = 'all 0.5s ease-out';
+      
       setTimeout(() => {
         lockedGallery.classList.add('hidden');
         unlockedGallery.classList.remove('hidden');
-        setTimeout(() => {
-          unlockedGallery.style.opacity = '1';
-        }, 50);
-        createConfetti();
+        
+        // Confetti celebration
+        createGalleryConfetti();
       }, 500);
     }
   }
 
-  // Confetti Celebration
-  function createConfetti() {
+  function createGalleryConfetti() {
     const colors = ['#fb7185', '#f43f5e', '#fda4af', '#fecdd3'];
-    const container = unlockedGallery;
-    for (let i = 0; i < 30; i++) {
+    const container = unlockedGallery?.parentElement;
+    
+    for (let i = 0; i < 40; i++) {
       const confetti = document.createElement('div');
       confetti.style.position = 'absolute';
-      confetti.style.width = '8px';
-      confetti.style.height = '8px';
+      confetti.style.width = '10px';
+      confetti.style.height = '10px';
       confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
       confetti.style.left = '50%';
-      confetti.style.top = '30%';
+      confetti.style.top = '0';
       confetti.style.borderRadius = '50%';
       confetti.style.pointerEvents = 'none';
       confetti.style.zIndex = '10';
+      
       container?.appendChild(confetti);
-      const angle = (Math.PI * 2 * i) / 30;
-      const velocity = 80 + Math.random() * 80;
+      
+      const angle = (Math.PI * 2 * i) / 40;
+      const velocity = 100 + Math.random() * 100;
       const tx = Math.cos(angle) * velocity;
       const ty = Math.sin(angle) * velocity;
+      
       confetti.animate([
         { transform: 'translate(0, 0) scale(1)', opacity: 1 },
         { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
       ], {
-        duration: 800 + Math.random() * 400,
+        duration: 1000 + Math.random() * 500,
         easing: 'cubic-bezier(0, .9, .57, 1)'
       }).onfinish = () => confetti.remove();
     }
   }
 
-  if (galleryUnlockBtn) {
-    galleryUnlockBtn.addEventListener('click', checkGalleryPassword);
+  // Event listeners
+  if (unlockBtn) {
+    unlockBtn.addEventListener('click', checkGalleryPassword);
   }
 
-  if (galleryInput) {
-    galleryInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') checkGalleryPassword();
+  if (galleryPassword) {
+    galleryPassword.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        checkGalleryPassword();
+      }
     });
   }
 </script>
