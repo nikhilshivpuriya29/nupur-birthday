@@ -1,0 +1,7 @@
+---
+// Clear cookies and redirect to login
+Astro.cookies.delete('user_id', { path: '/' });
+Astro.cookies.delete('user_role', { path: '/' });
+
+return Astro.redirect('/login');
+---

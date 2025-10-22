@@ -1,11 +1,11 @@
-import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
+import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   integrations: [tailwind()],
-  output: "static",
+  output: 'server',  // ADD THIS LINE
   compressHTML: true,
   build: {
-    inlineStylesheets: "auto",
-  },
+    inlineStylesheets: 'auto'
+  }
 });

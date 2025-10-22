@@ -1,0 +1,331 @@
+---
+import { getCurrentUser } from '../lib/auth.js';
+import { supabase } from '../lib/supabase.js';
+
+const user = await getCurrentUser(Astro.cookies);
+
+if (!user || user.role !== 'nikhil') {
+  return Astro.redirect('/login');
+}
+
+// Get Nupur's user ID
+const { data: nupurUser } = await supabase
+  .from('users')
+  .select('id')
+  .eq('role', 'nupur')
+  .single();
+
+// Fetch shared entries (main dashboard)
+const { data: sharedEntries } = await supabase
+  .from('journal_entries')
+  .select('*')
+  .eq('user_id', nupurUser?.id)
+  .eq('shared_with_nikki', true)
+  .order('created_at', { ascending: false });
+
+// Fetch non-shared entries (archive - silent access)
+const { data: archiveEntries } = await supabase
+  .from('journal_entries')
+  .select('*')
+  .eq('user_id', nupurUser?.id)
+  .eq('shared_with_nikki', false)
+  .order('created_at', { ascending: false });
+
+// Calculate relationship days
+const startDate = new Date('2021-04-17'); // Adjust to your actual start date
+const today = new Date();
+const daysTogether = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Our Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #fff1f2 0%, #fce7f3 50%, #fff1f2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-top: 20px;
+    }
+    
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      color: #be123c;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .back-link {
+      display: inline-block;
+      color: #be123c;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #be123c;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 12px;
+      background: white;
+      border: 2px solid #fecdd3;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      color: #9f1239;
+      transition: all 0.3s ease;
+    }
+    
+    .tab.active {
+      background: #fce7f3;
+      border-color: #fb7185;
+      color: #be123c;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #be123c;
+      margin-bottom: 15px;
+    }
+    
+    .entry-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .entry-mood {
+      font-size: 1.5rem;
+    }
+    
+    .entry-date {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+    
+    .entry-content {
+      color: #4b5563;
+      line-height: 1.6;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #9ca3af;
+      background: white;
+      border-radius: 16px;
+    }
+    
+    .archive-note {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/our-space" class="back-link">← Back to Our Space</a>
+    
+    <header>
+      <h1>Nikhil's Dashboard 📊</h1>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">{daysTogether}</div>
+        <div class="stat-label">Days Together</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{(sharedEntries?.length || 0) + (archiveEntries?.length || 0)}</div>
+        <div class="stat-label">Total Journal Entries</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{sharedEntries?.length || 0}</div>
+        <div class="stat-label">Shared with You</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="shared">💌 Shared Entries</div>
+      <div class="tab" data-tab="archive">📁 Archive (All Entries)</div>
+    </div>
+
+    <!-- Shared Entries Tab -->
+    <div class="tab-content active" id="shared">
+      <h2 class="section-title">Entries Nupur Shared With You</h2>
+      
+      {sharedEntries && sharedEntries.length > 0 ? (
+        sharedEntries.map(entry => (
+          <div class="entry-card">
+            <div class="entry-header">
+              <span class="entry-mood">{
+                entry.mood === 'happy' ? '😊' :
+                entry.mood === 'loved' ? '🥰' :
+                entry.mood === 'excited' ? '✨' :
+                entry.mood === 'grateful' ? '🙏' :
+                entry.mood === 'tired' ? '😴' :
+                entry.mood === 'stressed' ? '😤' :
+                entry.mood === 'sad' ? '😢' :
+                entry.mood === 'anxious' ? '😰' : '💭'
+              }</span>
+              <span class="entry-date">
+                {new Date(entry.created_at).toLocaleDateString('en-IN', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </span>
+            </div>
+            <div class="entry-content">{entry.content}</div>
+          </div>
+        ))
+      ) : (
+        <div class="empty-state">
+          <p>No shared entries yet</p>
+        </div>
+      )}
+    </div>
+
+    <!-- Archive Tab -->
+    <div class="tab-content" id="archive">
+      <div class="archive-note">
+        🔒 These are entries Nupur hasn't explicitly shared. Access with care and respect.
+      </div>
+      
+      <h2 class="section-title">All Journal Entries</h2>
+      
+      {archiveEntries && archiveEntries.length > 0 ? (
+        archiveEntries.map(entry => (
+          <div class="entry-card">
+            <div class="entry-header">
+              <span class="entry-mood">{
+                entry.mood === 'happy' ? '😊' :
+                entry.mood === 'loved' ? '🥰' :
+                entry.mood === 'excited' ? '✨' :
+                entry.mood === 'grateful' ? '🙏' :
+                entry.mood === 'tired' ? '😴' :
+                entry.mood === 'stressed' ? '😤' :
+                entry.mood === 'sad' ? '😢' :
+                entry.mood === 'anxious' ? '😰' : '💭'
+              }</span>
+              <span class="entry-date">
+                {new Date(entry.created_at).toLocaleDateString('en-IN', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </span>
+            </div>
+            <div class="entry-content">{entry.content}</div>
+          </div>
+        ))
+      ) : (
+        <div class="empty-state">
+          <p>No private entries</p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        // Remove active class from all tabs and contents
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
