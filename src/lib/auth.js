@@ -1,17 +1,6 @@
-import bcrypt from 'bcryptjs';
+import { hashPassword, comparePassword } from './hash.js';
 import { supabase } from './supabase.js';
 
-// Hash password
-export async function hashPassword(password) {
-  return await bcrypt.hash(password, 10);
-}
-
-// Verify password
-export async function verifyPassword(password, hash) {
-  return await bcrypt.compare(password, hash);
-}
-
-// Login user
 export async function loginUser(username, password) {
   try {
     // Get user from database
@@ -27,20 +16,17 @@ export async function loginUser(username, password) {
 
     // Check if password needs to be hashed (first login)
     if (user.password_hash.startsWith('TEMP_HASH')) {
-      // First login - set real password
       const hashedPassword = await hashPassword(password);
-      
       await supabase
         .from('users')
         .update({ password_hash: hashedPassword })
         .eq('id', user.id);
-      
       return { success: true, user };
     }
 
-    // Verify password
-    const isValid = await verifyPassword(password, user.password_hash);
-    
+    // Compare password normally
+    const isValid = await comparePassword(password, user.password_hash);
+
     if (!isValid) {
       return { success: false, error: 'Invalid username or password' };
     }
@@ -52,12 +38,11 @@ export async function loginUser(username, password) {
   }
 }
 
-// Check if user is logged in
+// Keep your existing session helper functions here
 export function isAuthenticated(cookies) {
   return cookies.get('user_id') !== undefined;
 }
 
-// Get current user
 export async function getCurrentUser(cookies) {
   const userId = cookies.get('user_id')?.value;
   if (!userId) return null;
